@@ -1,1 +1,17 @@
-{{!-- arrest details page placeholder --}}
+<h1>Arrest Details</h1>
+
+<p>Offense: {{arrest.offense_description}}</p>
+<p>Borough: {{arrest.borough}}</p>
+<p>Date: {{arrest.arrest_date}}</p>
+<p>Precinct: {{arrest.precinct}}</p>
+<p>Law Category: {{arrest.law_category}}</p>
+<p>Age Group: {{arrest.age_group}}</p>
+<p>Sex: {{arrest.gender}}</p>
+<p>Race: {{arrest.race}}</p>
+
+{{#if arrest.arrest_location}}
+  <p>Latitude: {{arrest.arrest_location.latitude}}</p>
+  <p>Longitude: {{arrest.arrest_location.longitude}}</p>
+{{/if}}
+
+<a id="backToList" class="back-link" href="/arrests">Back to Arrest List</a>

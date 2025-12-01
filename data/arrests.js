@@ -173,4 +173,52 @@ const removeArrest = async (id) => {
   return { deleted: true };
 };
 
-export { createArrest, getAllArrests, getArrestById, removeArrest };
+const getArrestsByFilter = async (filters = {}) => {
+  const arrestCollection = await arrests();
+  const query = {};
+
+  if (filters.borough) query.borough = checkString(filters.borough, "borough");
+  if (filters.precinct !== undefined && filters.precinct !== "") {
+    const p = Number(filters.precinct);
+    if (isNaN(p) || p < 1 || p > 123) throw "Invalid precinct";
+    query.precinct = p;
+  }
+  if (filters.offense_description)
+    query.offense_description = checkString(filters.offense_description, "offense_description");
+  if (filters.law_category)
+    query.law_category = checkString(filters.law_category, "law_category");
+  if (filters.age_group)
+    query.age_group = checkString(filters.age_group, "age_group");
+  if (filters.gender)
+    query.gender = checkString(filters.gender, "gender");
+  if (filters.race)
+    query.race = checkString(filters.race, "race");
+
+  const results = await arrestCollection.find(query).toArray();
+  return results.map((a) => ({ ...a, _id: a._id.toString() }));
+};
+
+const searchArrests = async (keyword) => {
+  keyword = checkString(keyword, "keyword");
+  const arrestCollection = await arrests();
+
+  const results = await arrestCollection
+    .find({
+      $or: [
+        { offense_description: { $regex: keyword, $options: "i" } },
+        { law_category: { $regex: keyword, $options: "i" } }
+      ]
+    })
+    .toArray();
+
+  return results.map((a) => ({ ...a, _id: a._id.toString() }));
+};
+
+export {
+  createArrest,
+  getAllArrests,
+  getArrestById,
+  removeArrest,
+  getArrestsByFilter,
+  searchArrests
+};
