@@ -1,6 +1,13 @@
 // config/mongoCollections.js
 import { MongoClient } from "mongodb";
-import { mongoConfig } from "./settings.js";
+// import { mongoConfig } from "./settings.js"; 
+
+/* 
+added this to fix the issue
+incase anyone wants to edit they can go back to prior one, you can uncomment the prior import and comment this one
+- Shravani
+*/
+import  mongoConfig  from "./settings.js"; 
 
 const { serverUrl, database, collections } = mongoConfig;
 
