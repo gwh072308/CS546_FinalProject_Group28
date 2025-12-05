@@ -8,7 +8,7 @@
     "start": "node app.js",
     "seed": "node tasks/seed.js"
   },
-  "author": "",
+  "author": "Team 28 - Wenhui Gao, Ren Li, Nageshwaran Manikumar, Shravani Pranay Sawant, Ao Wang",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

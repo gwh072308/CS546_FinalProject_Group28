@@ -1,27 +1,31 @@
+<<<<<<< Updated upstream
 // config/mongoCollections.js
 import { MongoClient } from "mongodb";
 import { mongoConfig } from "./settings.js";
+=======
+// mongoCollections.js
+// Collection accessor functions
+// Each function returns a cached collection reference
 
-const { serverUrl, database, collections } = mongoConfig;
+import {dbConnection} from './mongoConnection.js';
+import {collections} from './settings.js';
+>>>>>>> Stashed changes
 
-let _client;
-let _db;
+// Generic collection getter with caching
+// This pattern ensures we reuse the same collection reference
+const getCollectionFn = (collection) => {
+  let _col = undefined;
 
-const getDb = async () => {
-  if (!_client) {
-    _client = new MongoClient(serverUrl);
-    await _client.connect();
-    _db = _client.db(database);
-  }
-  return _db;
+  return async () => {
+    if (!_col) {
+      const db = await dbConnection();
+      _col = await db.collection(collection);
+    }
+    return _col;
+  };
 };
 
-const getCollection = async (collectionName) => {
-  const db = await getDb();
-  return db.collection(collectionName);
-};
-
-
-export const arrests = async () => getCollection(collections.arrests);
-export const users = async () => getCollection(collections.users);
-export const comments = async () => getCollection(collections.comments);
+// Export collection accessors
+export const arrests = getCollectionFn(collections.arrests);
+export const users = getCollectionFn(collections.users);
+export const comments = getCollectionFn(collections.comments);

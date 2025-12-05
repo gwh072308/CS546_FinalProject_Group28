@@ -1,8 +1,19 @@
-// settings.js - MongoDB settings placeholder
+// settings.js
+// MongoDB configuration settings
 
-const mongoConfig = {
+export const mongoConfig = {
   serverUrl: "mongodb://127.0.0.1:27017/",
-  database: "cs546_final_project_group28"
+  database: "nyc_arrests"  // or maybe "cs546_final_project_group28"
 };
 
-export default mongoConfig;
+export const collections = {
+  arrests: "arrests",
+  users: "users",
+  comments: "comments"
+};
+
+// For backwards compatibility
+export default {
+  ...mongoConfig,
+  collections
+};
