@@ -3,7 +3,7 @@
 import bcrypt from "bcryptjs";
 import { ObjectId } from "mongodb";
 import dbConnection from "../config/mongoConnection.js";
-import { validateId } from "./utils.js";
+import { checkId } from "./utils.js";
 
 const saltRounds = 10;
 
@@ -39,7 +39,7 @@ const exportedMethods = {
   },
 
   async getUserById(id) {
-    id = validateId(id);
+    id = checkId(id);
     const db = await dbConnection();
     const usersCol = db.collection("users");
     const user = await usersCol.findOne({ _id: new ObjectId(id) });
@@ -72,8 +72,8 @@ const exportedMethods = {
   },
 
   async addFavorite(userId, arrestId) {
-    userId = validateId(userId);
-    arrestId = validateId(arrestId);
+    userId = checkId(userId);
+    arrestId = checkId(arrestId);
     const db = await dbConnection();
     const usersCol = db.collection("users");
     const updateInfo = await usersCol.updateOne(
@@ -85,8 +85,8 @@ const exportedMethods = {
   },
 
   async removeFavorite(userId, arrestId) {
-    userId = validateId(userId);
-    arrestId = validateId(arrestId);
+    userId = checkId(userId);
+    arrestId = checkId(arrestId);
     const db = await dbConnection();
     const usersCol = db.collection("users");
     const updateInfo = await usersCol.updateOne(

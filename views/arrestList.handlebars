@@ -1,0 +1,35 @@
+<div class="container">
+  <h1>NYC Arrest Records</h1>
+  
+  <div class="filter-links">
+    <a href="/arrests/filter">Filter Arrests</a> |
+    <a href="/arrests/search">Search Arrests</a>
+  </div>
+  
+  {{#if arrests}}
+    <p class="total-count">Total records: {{arrests.length}}</p>
+    
+    <div class="arrests-grid">
+      {{#each arrests}}
+        <div class="arrest-card">
+          <h3>{{this.offense_description}}</h3>
+          <div class="arrest-info">
+            <p><strong>Date:</strong> {{this.arrest_date}}</p>
+            <p><strong>Borough:</strong> {{this.borough}}</p>
+            <p><strong>Precinct:</strong> {{this.precinct}}</p>
+            <p><strong>Law Category:</strong> {{this.law_category}}</p>
+            <p><strong>Age Group:</strong> {{this.age_group}}</p>
+            <p><strong>Gender:</strong> {{this.gender}}</p>
+            <p><strong>Race:</strong> {{this.race}}</p>
+          </div>
+          <a href="/arrests/{{this._id}}" class="details-link">View Details →</a>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    <div class="no-results">
+      <p>No arrest records found.</p>
+      <a href="/arrests">View all arrests</a>
+    </div>
+  {{/if}}
+</div>
