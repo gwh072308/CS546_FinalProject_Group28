@@ -1,1 +1,52 @@
 {{!-- search page placeholder --}}
+{{!-- file name: views/search.handlebars --}}
+{{!-- last edited on: Dec 04, 2025 - Shravani --}}
+
+<h1>Search Arrest Records</h1>
+<p>
+    Use a keyword related to the offense description to look up matching arrests. 
+    For example: <em>ROBBERY</em>, <em>BURGLARY</em>, <em>ASSAULT</em>, etc.
+</p>
+
+{{!-- Server-sode error from routes/arrests.js, if any --}}
+{{#if error}}  
+    <p id="search-error" class="error">{{error}}</p>
+{{else}}
+    <p id="search-error" class="error"></p>
+{{/if}}
+
+<form id="search-form" method="get" action="/arrests/search">
+    <label for="keyword">Keyword:</label>
+    <input 
+        type="text"
+        id="keyword"
+        name="keyword"
+        value="{{keyword}}"
+        placeholder="Type a keyword here"
+        autocomplete="off"
+    >
+    
+    <button type="submit">Search</button>
+</form>
+
+<br>
+
+{{#if results}}
+    {{#if results.length}}
+        <h3>Search Results</h3>
+        <ul>
+            {{#each results}}
+                <li>
+                    <a href="/arrests/{{this._id}}">
+                        {{this.offense_description}} - {{this.borough}} ({{this.arrest_date}})
+                    </a>
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p>No arrests matched to your search</p>
+    {{/if}}
+{{/if}}
+
+{{!-- Little bit of client-side checks (non-blocking, just user-friendly) --}}
+<script src="/public/js/search.js"></script>

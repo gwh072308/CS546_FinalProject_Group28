@@ -2,11 +2,6 @@
 // Main application entry point
 // Express server configuration with session support, middleware, and error handling
 
-<<<<<<< Updated upstream
-import express from "express";
-import exphbs from "express-handlebars";
-import configRoutes from "./routes/index.js";
-=======
 import express from 'express';
 import session from 'express-session';
 import exphbs from 'express-handlebars';
@@ -24,7 +19,6 @@ import configRoutes from './routes/index.js';
 // Setup __dirname for ES6 modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
->>>>>>> Stashed changes
 
 const app = express();
 
@@ -47,12 +41,6 @@ const rewriteUnsupportedBrowserMethods = (req, res, next) => {
 };
 app.use(rewriteUnsupportedBrowserMethods);
 
-<<<<<<< Updated upstream
-app.use("/", configRoutes);
-
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
-=======
 // Session configuration
 app.use(
   session({
@@ -77,7 +65,6 @@ const handlebarsInstance = exphbs.create({
     }
   },
   partialsDir: ['views/partials/']
->>>>>>> Stashed changes
 });
 
 app.engine('handlebars', handlebarsInstance.engine);
