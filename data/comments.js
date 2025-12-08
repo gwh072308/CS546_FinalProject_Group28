@@ -35,8 +35,8 @@ const exportedMethods = {
 
     // Construct new comment document with timestamps
     const newComment = {
-      userId: ObjectId(userId),
-      arrestId: ObjectId(arrestId),
+      userId: new ObjectId(userId),
+      arrestId: new ObjectId(arrestId),
       text: text.trim(),
       createdAt: new Date(),  // Track when comment was created
       updatedAt: new Date()   // Track last update time
@@ -68,7 +68,7 @@ const exportedMethods = {
     const commentsCollection = db.collection(collectionName);
 
     const comment = await commentsCollection.findOne({ 
-      _id: ObjectId(id) 
+      _id: new ObjectId(id) 
     });
 
     if (!comment) {
@@ -98,7 +98,7 @@ const exportedMethods = {
 
     // Fetch comments sorted by creation date (newest first)
     const comments = await commentsCollection
-      .find({ arrestId: ObjectId(arrestId) })
+      .find({ arrestId: new ObjectId(arrestId) })
       .sort({ createdAt: -1 })
       .toArray();
 
@@ -127,7 +127,7 @@ const exportedMethods = {
     const commentsCollection = db.collection(collectionName);
 
     const comments = await commentsCollection
-      .find({ userId: ObjectId(userId) })
+      .find({ userId: new ObjectId(userId) })
       .sort({ createdAt: -1 })
       .toArray();
 
@@ -168,8 +168,8 @@ const exportedMethods = {
     // Update only if user owns the comment (security check)
     const updateInfo = await commentsCollection.updateOne(
       { 
-        _id: ObjectId(commentId), 
-        userId: ObjectId(userId)  // Ensures user can only update their own comments
+        _id: new ObjectId(commentId), 
+        userId: new ObjectId(userId)  // Ensures user can only update their own comments
       },
       { 
         $set: { 
@@ -208,8 +208,8 @@ const exportedMethods = {
 
     // Delete only if user owns the comment
     const deletionInfo = await commentsCollection.deleteOne({
-      _id: ObjectId(commentId),
-      userId: ObjectId(userId)
+      _id: new ObjectId(commentId),
+      userId: new ObjectId(userId)
     });
 
     if (deletionInfo.deletedCount === 0) {
@@ -255,7 +255,7 @@ const exportedMethods = {
     const commentsCollection = db.collection(collectionName);
 
     const deletionInfo = await commentsCollection.deleteMany({
-      arrestId: ObjectId(arrestId)
+      arrestId: new ObjectId(arrestId)
     });
 
     return { 
