@@ -26,7 +26,11 @@ router.post("/login", requireGuest, async (req, res) => {
     }
 
     username = checkString(username, "username");
-    password = checkString(password, "password");
+    
+    // Validate password without trimming (security: preserve user intent)
+    if (typeof password !== "string" || password.length === 0) {
+      throw "Invalid password";
+    }
 
     // Verify user credentials
     const user = await usersData.verifyUser(username, password);
@@ -65,7 +69,7 @@ router.post("/register", requireGuest, async (req, res) => {
       });
     }
 
-    // Validate password match (before trimming)
+    // Validate password match (before validation/trimming)
     if (password !== passwordConfirm) {
       return res.status(400).render("register", { 
         error: "Passwords do not match",
@@ -73,16 +77,20 @@ router.post("/register", requireGuest, async (req, res) => {
       });
     }
 
-    // Validate all inputs using checkString
+    // Validate username and email using checkString
     username = checkString(username, "username");
-    password = checkString(password, "password");
     email = checkString(email, "email");
+
+    // Validate password without trimming (security: preserve user intent)
+    if (typeof password !== "string" || password.length === 0) {
+      throw "Invalid password";
+    }
 
     // Create user
     const newUser = await usersData.createUser({
-      username: username.trim(),
+      username: username,
       password: password,
-      email: email.trim()
+      email: email
     });
 
     // Automatically log in the new user
