@@ -3,7 +3,7 @@
 import { Router } from "express";
 import usersData from "../data/users.js";
 import { requireAuth, requireGuest } from "../middleware/auth.js";
-import { checkString } from "../data/utils.js";
+import { checkString, checkId } from "../data/utils.js";
 
 const router = Router();
 
@@ -15,7 +15,7 @@ router.get("/login", requireGuest, (req, res) => {
 // POST /users/login - Handle user login
 router.post("/login", requireGuest, async (req, res) => {
   try {
-    const { username, password } = req.body;
+    let { username, password } = req.body;
 
     // Validate input
     if (!username || !password) {
@@ -24,6 +24,9 @@ router.post("/login", requireGuest, async (req, res) => {
         title: "Login"
       });
     }
+
+    username = checkString(username, "username");
+    password = checkString(password, "password");
 
     // Verify user credentials
     const user = await usersData.verifyUser(username, password);
@@ -38,7 +41,7 @@ router.post("/login", requireGuest, async (req, res) => {
     return res.redirect("/");
   } catch (e) {
     return res.status(401).render("login", { 
-      error: e.toString(),
+      error: e,
       title: "Login"
     });
   }
@@ -52,7 +55,7 @@ router.get("/register", requireGuest, (req, res) => {
 // POST /users/register - Handle user registration
 router.post("/register", requireGuest, async (req, res) => {
   try {
-    const { username, password, passwordConfirm, email } = req.body;
+    let { username, password, passwordConfirm, email } = req.body;
 
     // Validate input
     if (!username || !password || !passwordConfirm || !email) {
@@ -62,7 +65,7 @@ router.post("/register", requireGuest, async (req, res) => {
       });
     }
 
-    // Validate password match
+    // Validate password match (before trimming)
     if (password !== passwordConfirm) {
       return res.status(400).render("register", { 
         error: "Passwords do not match",
@@ -70,10 +73,15 @@ router.post("/register", requireGuest, async (req, res) => {
       });
     }
 
+    // Validate all inputs using checkString
+    username = checkString(username, "username");
+    password = checkString(password, "password");
+    email = checkString(email, "email");
+
     // Create user
     const newUser = await usersData.createUser({
       username: username.trim(),
-      password: password.trim(),
+      password: password,
       email: email.trim()
     });
 
@@ -87,7 +95,7 @@ router.post("/register", requireGuest, async (req, res) => {
     return res.redirect("/");
   } catch (e) {
     return res.status(400).render("register", { 
-      error: e.toString(),
+      error: e,
       title: "Register"
     });
   }
@@ -96,7 +104,7 @@ router.post("/register", requireGuest, async (req, res) => {
 // GET /users/profile/:id - Display user profile
 router.get("/profile/:id", async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = checkId(req.params.id, "User ID");
     const user = await usersData.getUserById(userId);
 
     return res.render("userProfile", { 
@@ -116,11 +124,7 @@ router.get("/profile/:id", async (req, res) => {
 router.get("/logout", requireAuth, (req, res) => {
   req.session.destroy((err) => {
     if (err) {
-      return res.status(500).render("error", { 
-        error: "Could not log out",
-        statusCode: 500,
-        title: "Error"
-      });
+      return res.redirect("/?error=logout_failed");
     }
     return res.redirect("/");
   });
