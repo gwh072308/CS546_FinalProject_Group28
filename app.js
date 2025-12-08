@@ -54,7 +54,6 @@ app.use(
   })
 );
 
-// Handlebars configuration
 const handlebarsInstance = exphbs.create({
   defaultLayout: 'main',
   helpers: {
@@ -62,11 +61,22 @@ const handlebarsInstance = exphbs.create({
       if (typeof spacing === 'number')
         return new exphbs.SafeString(JSON.stringify(obj, null, spacing));
       return new exphbs.SafeString(JSON.stringify(obj));
+    },
+    // Math helper for simple arithmetic operations in templates
+    math: (lvalue, operator, rvalue) => {
+      lvalue = parseFloat(lvalue);
+      rvalue = parseFloat(rvalue);
+      return {
+        "+": lvalue + rvalue,
+        "-": lvalue - rvalue,
+        "*": lvalue * rvalue,
+        "/": lvalue / rvalue,
+        "%": lvalue % rvalue
+      }[operator];
     }
   },
   partialsDir: ['views/partials/']
 });
-
 app.engine('handlebars', handlebarsInstance.engine);
 app.set('view engine', 'handlebars');
 

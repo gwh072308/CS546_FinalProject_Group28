@@ -4,6 +4,7 @@ import {
   checkId,
   checkString,
   checkNumber,
+  checkPositiveInt
 } from "../data/utils.js";
 
 const createArrest = async (
@@ -135,16 +136,43 @@ const createArrest = async (
   return inserted;
 };
 
-const getAllArrests = async () => {
+// Get all arrests with pagination support
+const getAllArrests = async (page = 1, limit = 50) => {
+  page = checkPositiveInt(page, "page");
+  limit = checkPositiveInt(limit, "limit");
+  
+  if (limit > 100) throw "Error: limit cannot exceed 100";
+  
   const arrestCollection = await arrests();
-  const all = await arrestCollection.find({}).toArray();
-
-  if (!all || all.length === 0) return [];
-
-  return all.map((a) => {
-    a._id = a._id.toString();
-    return a;
-  });
+  
+  try {
+    // Calculate skip value
+    const skip = (page - 1) * limit;
+    
+    // Get total count
+    const totalCount = await arrestCollection.countDocuments();
+    
+    // Get paginated results
+    const arrestList = await arrestCollection
+      .find({})
+      .skip(skip)
+      .limit(limit)
+      .toArray();
+    
+    // Calculate total pages
+    const totalPages = Math.ceil(totalCount / limit);
+    
+    return {
+      arrests: arrestList,
+      currentPage: page,
+      totalPages: totalPages,
+      totalCount: totalCount,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1
+    };
+  } catch (e) {
+    throw `Error: could not get arrests - ${e}`;
+  }
 };
 
 const getArrestById = async (id) => {
@@ -213,12 +241,67 @@ const searchArrests = async (keyword) => {
 
   return results.map((a) => ({ ...a, _id: a._id.toString() }));
 };
-
+// Get crime category ranking - identify most frequent offenses citywide
+const getCrimeRanking = async (limit = 10) => {
+  // Validate limit
+  limit = checkNumber(limit, "limit");
+  if (limit < 1 || limit > 50) {
+    throw "Error: limit must be between 1 and 50";
+  }
+  
+  const arrestCollection = await arrests();
+  
+  try {
+    const ranking = await arrestCollection.aggregate([
+      {
+        $group: {
+          _id: "$offense_description",
+          count: { $sum: 1 },
+          lawCategory: { $first: "$law_category" }
+        }
+      },
+      {
+        $sort: { count: -1 }
+      },
+      {
+        $limit: limit
+      },
+      {
+        $project: {
+          _id: 0,
+          offense: "$_id",
+          count: 1,
+          lawCategory: 1,
+          percentage: {
+            $round: [
+              {
+                $multiply: [
+                  { $divide: ["$count", 1000] },
+                  100
+                ]
+              },
+              2
+            ]
+          }
+        }
+      }
+    ]).toArray();
+    
+    if (!ranking || ranking.length === 0) {
+      throw "Error: no ranking data found";
+    }
+    
+    return ranking;
+  } catch (e) {
+    throw `Error: could not get crime ranking - ${e}`;
+  }
+};
 export {
   createArrest,
   getAllArrests,
   getArrestById,
   removeArrest,
   getArrestsByFilter,
-  searchArrests
+  searchArrests,
+  getCrimeRanking
 };
