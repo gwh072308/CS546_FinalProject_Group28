@@ -6,6 +6,7 @@ import {
   getArrestsByFilter,
   searchArrests
 } from "../data/arrests.js";
+import commentsData from "../data/comments.js";
 import { checkString, checkId } from "../data/utils.js";
 
 
@@ -49,7 +50,7 @@ router.get("/filter", async (req, res) => {
     const results = await getArrestsByFilter(filters);
     return res.render("filter", { arrests: results });
   } catch (e) {
-    return res.render("error", { error: e });
+    return res.status(400).render("error", { error: e });
   }
 });
 
@@ -57,9 +58,19 @@ router.get("/:id", async (req, res) => {
   try {
     const id = checkId(req.params.id, "id");
     const arrest = await getArrestById(id);
-    return res.render("arrestDetails", { arrest });
+    return res.render("arrestDetails", { arrest, user: req.session.user || null });
   } catch (e) {
     return res.status(404).render("error", { error: e });
+  }
+});
+
+router.get("/:id/comments", async (req, res) => {
+  try {
+    const id = checkId(req.params.id);
+    const comments = await commentsData.getCommentsByArrestId(id);
+    return res.json(comments);
+  } catch (e) {
+    return res.status(400).json({ error: e });
   }
 });
 

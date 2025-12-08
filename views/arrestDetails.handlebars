@@ -1,17 +1,53 @@
 <h1>Arrest Details</h1>
 
-<p>Offense: {{arrest.offense_description}}</p>
-<p>Borough: {{arrest.borough}}</p>
-<p>Date: {{arrest.arrest_date}}</p>
-<p>Precinct: {{arrest.precinct}}</p>
-<p>Law Category: {{arrest.law_category}}</p>
-<p>Age Group: {{arrest.age_group}}</p>
-<p>Sex: {{arrest.gender}}</p>
-<p>Race: {{arrest.race}}</p>
+<p><strong>Offense:</strong> {{arrest.offense_description}}</p>
+<p><strong>Borough:</strong> {{arrest.borough}}</p>
+<p><strong>Date:</strong> {{arrest.arrest_date}}</p>
+<p><strong>Precinct:</strong> {{arrest.precinct}}</p>
+<p><strong>Law Category:</strong> {{arrest.law_category}}</p>
+<p><strong>Age Group:</strong> {{arrest.age_group}}</p>
+<p><strong>Gender:</strong> {{arrest.gender}}</p>
+<p><strong>Race:</strong> {{arrest.race}}</p>
 
-{{#if arrest.arrest_location}}
-  <p>Latitude: {{arrest.arrest_location.latitude}}</p>
-  <p>Longitude: {{arrest.arrest_location.longitude}}</p>
+<p><strong>Latitude:</strong> {{arrest.arrest_location.latitude}}</p>
+<p><strong>Longitude:</strong> {{arrest.arrest_location.longitude}}</p>
+
+<br>
+
+<a class="back-link" href="/arrests">Back to Arrest List</a>
+
+<br><br>
+
+<div id="map" data-lat="{{arrest.arrest_location.latitude}}" data-lon="{{arrest.arrest_location.longitude}}"
+  style="height: 350px; width: 80%; border: 1px solid #ccc; margin-top:20px;">
+</div>
+
+<script src="/public/js/map.js"></script>
+<hr>
+
+<h2>Comments</h2>
+<ul id="commentSection"></ul>
+
+<div id="comments-area">
+  <p>Loading comments...</p>
+</div>
+
+<hr>
+
+<script src="/public/js/comments.js"></script>
+
+{{#if user}}
+<h3>Add a Comment</h3>
+
+<form id="comment-form">
+  <input type="hidden" id="arrestId" value="{{arrest._id}}">
+  <input type="hidden" id="userId" value="{{user._id}}">
+
+  <textarea id="comment-text" rows="3" required></textarea>
+  <br>
+  <button type="submit" class="btn-primary">Submit Comment</button>
+</form>
+{{else}}
+<p><a href="/users/login">Log in</a> to add a comment.</p>
 {{/if}}
 
-<a id="backToList" class="back-link" href="/arrests">Back to Arrest List</a>

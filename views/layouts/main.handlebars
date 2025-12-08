@@ -1,11 +1,27 @@
 {{!-- main layout placeholder --}}
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>CS546 Final Project</title>
-    <link rel="stylesheet" href="/public/css/styles.css">
-  </head>
-  <body>
+
+<head>
+  <title>CS546 Final Project</title>
+  <link rel="stylesheet" href="/public/css/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+
+<body>
+  {{> navbar}}
+
+  <main>
     {{{body}}}
-  </body>
+  </main>
+
+  {{> footer}}
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/public/js/map.js"></script>
+  <script src="/public/js/comments.js"></script>
+
+</body>
+
 </html>
