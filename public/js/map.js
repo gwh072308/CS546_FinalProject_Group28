@@ -1,6 +1,14 @@
 (function () {
-    var lat = parseFloat(document.getElementById("map").dataset.lat);
-    var lon = parseFloat(document.getElementById("map").dataset.lon);
+    // Check if map element exists first
+    var mapElement = document.getElementById("map");
+    
+    if (!mapElement) {
+        // No map element on this page, exit silently
+        return;
+    }
+    
+    var lat = parseFloat(mapElement.dataset.lat);
+    var lon = parseFloat(mapElement.dataset.lon);
 
     if (!isNaN(lat) && !isNaN(lon)) {
         var map = L.map("map").setView([lat, lon], 14);
@@ -13,7 +21,7 @@
             .bindPopup("Arrest Location")
             .openPopup();
     } else {
-        document.getElementById("map").innerHTML =
+        mapElement.innerHTML =
             "<p>No location data available for this arrest.</p>";
     }
 })();

@@ -59,10 +59,10 @@ router.get("/register", requireGuest, (req, res) => {
 // POST /users/register - Handle user registration
 router.post("/register", requireGuest, async (req, res) => {
   try {
-    let { username, password, passwordConfirm, email } = req.body;
+    let { username, password, confirmPassword, email } = req.body;
 
     // Validate input
-    if (!username || !password || !passwordConfirm || !email) {
+    if (!username || !password || !confirmPassword || !email) {
       return res.status(400).render("register", { 
         error: "All fields are required",
         title: "Register"
@@ -70,7 +70,7 @@ router.post("/register", requireGuest, async (req, res) => {
     }
 
     // Validate password match (before validation/trimming)
-    if (password !== passwordConfirm) {
+    if (password !== confirmPassword) {
       return res.status(400).render("register", { 
         error: "Passwords do not match",
         title: "Register"
