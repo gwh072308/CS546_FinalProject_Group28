@@ -1,20 +1,38 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/">NYC Arrest Data</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="/trends/monthly">Monthly Trends</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/trends/weekly">Weekly Trends</a>
-        </li>
-      </ul>
-    </div>
+<nav class="main-navbar">
+  <div class="nav-container">
+    <a class="nav-brand" href="/">NYC Arrest Data</a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      
+      <li class="nav-dropdown">
+        <a href="#" class="dropdown-toggle">Arrests ▼</a>
+        <ul class="dropdown-menu">
+          <li><a href="/arrests">Browse All</a></li>
+          <li><a href="/arrests/filter">Filter & Search</a></li>
+        </ul>
+      </li>
+      
+      <li class="nav-dropdown">
+        <a href="#" class="dropdown-toggle">Analysis ▼</a>
+        <ul class="dropdown-menu">
+          <li><a href="/arrests/ranking">Crime Ranking</a></li>
+          <li><a href="/trends/monthly">Monthly Trends</a></li>
+          <li><a href="/trends/weekly">Weekly Trends</a></li>
+        </ul>
+      </li>
+      
+      <li class="nav-dropdown">
+        <a href="#" class="dropdown-toggle">Account ▼</a>
+        <ul class="dropdown-menu">
+          {{#if user}}
+          <li><a href="/users/profile">My Profile</a></li>
+          <li><a href="/users/logout">Logout</a></li>
+          {{else}}
+          <li><a href="/users/login">Login</a></li>
+          <li><a href="/users/register">Register</a></li>
+          {{/if}}
+        </ul>
+      </li>
+    </ul>
   </div>
 </nav>
