@@ -110,14 +110,15 @@ router.post("/register", requireGuest, async (req, res) => {
 });
 
 // GET /users/profile/:id - Display user profile
-router.get("/profile/:id", async (req, res) => {
+router.get("/profile", async (req, res) => {
   try {
-    const userId = checkId(req.params.id, "User ID");
-    const user = await usersData.getUserById(userId);
-
+     if (!req.session.user) {
+      return res.redirect("/users/login");
+    }
+    const user = await usersData.getUserById(req.session.user._id);
     return res.render("userProfile", { 
       user,
-      title: "User Profile"
+      title: "My Profile"
     });
   } catch (e) {
     return res.status(404).render("error", { 
