@@ -73,6 +73,10 @@ const handlebarsInstance = exphbs.create({
         "/": lvalue / rvalue,
         "%": lvalue % rvalue
       }[operator];
+    },
+    // Equality helper for comparisons in templates
+    eq: (a, b) => {
+      return a === b;
     }
   },
   partialsDir: ['views/partials/']

@@ -1,1 +1,140 @@
 {{!-- home page placeholder --}}
+<div class="home-container">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <h1>NYC Arrest Data Visualization</h1>
+    <p class="subtitle">Explore and analyze arrest patterns across New York City</p>
+  </div>
+
+  <!-- Core Features Section -->
+  <section class="features-section">
+    <h2 class="section-title">Core Features</h2>
+    <div class="features-grid">
+      <!-- 1. Browse Arrests -->
+      <div class="feature-card primary">
+        <div class="card-icon">📊</div>
+        <h3>Browse Arrests</h3>
+        <p>View all arrest records with pagination and detailed information for each case</p>
+        <a href="/arrests" class="card-button">View Arrests →</a>
+      </div>
+
+      <!-- 2. Filter & Search -->
+      <div class="feature-card primary">
+        <div class="card-icon">🔍</div>
+        <h3>Filter & Search</h3>
+        <p>Filter arrests by borough, precinct, demographics, and export filtered results</p>
+        <a href="/arrests/filter" class="card-button">Start Filtering →</a>
+      </div>
+
+      <!-- 3. Crime Ranking -->
+      <div class="feature-card primary">
+        <div class="card-icon">🏆</div>
+        <h3>Crime Ranking</h3>
+        <p>Identify the most frequent offenses across all five NYC boroughs</p>
+        <a href="/arrests/ranking" class="card-button">View Ranking →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Analysis Tools Section -->
+  <section class="features-section">
+    <h2 class="section-title">Analysis & Insights</h2>
+    <div class="features-grid">
+      <!-- 4. Time-Series Trends -->
+      <div class="feature-card secondary">
+        <div class="card-icon">📈</div>
+        <h3>Time-Series Trends</h3>
+        <p>Visualize monthly and weekly arrest counts to observe temporal changes</p>
+        <div class="card-buttons">
+          <a href="/trends/monthly" class="card-button-small">Monthly</a>
+          <a href="/trends/weekly" class="card-button-small">Weekly</a>
+        </div>
+      </div>
+
+      <!-- 5. Statistical Dashboard -->
+      <div class="feature-card secondary coming-soon">
+        <div class="card-icon">📊</div>
+        <h3>Statistical Dashboard</h3>
+        <p>Summary dashboard with total arrests, major crime categories, and borough comparisons</p>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
+
+      <!-- 6. Demographic Insights -->
+      <div class="feature-card secondary coming-soon">
+        <div class="card-icon">👥</div>
+        <h3>Demographic Insights</h3>
+        <p>Analyze arrest patterns by age, gender, and race across different regions</p>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
+
+      <!-- 7. Data Export -->
+      <div class="feature-card secondary">
+        <div class="card-icon">📥</div>
+        <h3>Data Export</h3>
+        <p>Export filtered arrest results to CSV or PDF files for reporting</p>
+        <a href="/arrests/filter" class="card-button-small">Export Data</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- User Features Section -->
+  <section class="features-section">
+    <h2 class="section-title">User Features</h2>
+    <div class="features-grid small">
+      <!-- 8. Comments -->
+      <div class="feature-card tertiary">
+        <div class="card-icon">💬</div>
+        <h3>Comments</h3>
+        <p>Add notes and comments on specific arrest records</p>
+        {{#if user}}
+        <a href="/comments/user/{{user._id}}" class="card-button-small">My Comments</a>
+        {{else}}
+        <a href="/users/login" class="card-button-small">Login to Comment</a>
+        {{/if}}
+      </div>
+
+      <!-- 9. Account Management -->
+      <div class="feature-card tertiary">
+        <div class="card-icon">👤</div>
+        <h3>My Account</h3>
+        {{#if user}}
+        <p>Welcome back, {{user.username}}!</p>
+        <a href="/users/profile" class="card-button-small">View Profile</a>
+        {{else}}
+        <p>Login or register to personalize your experience</p>
+        <a href="/users/login" class="card-button-small">Login / Register</a>
+        {{/if}}
+      </div>
+
+      <!-- 10. Help & FAQ -->
+      <div class="feature-card tertiary coming-soon">
+        <div class="card-icon">❓</div>
+        <h3>Help & FAQ</h3>
+        <p>Learn about system features and get answers to common questions</p>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Extra Features Section -->
+  <section class="features-section">
+    <h2 class="section-title">Extra Features</h2>
+    <div class="features-grid small">
+      <!-- Dark/Light Mode -->
+      <div class="feature-card tertiary coming-soon">
+        <div class="card-icon">🌓</div>
+        <h3>Dark/Light Mode</h3>
+        <p>Switch between themes for comfortable viewing</p>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
+
+      <!-- Advanced Search -->
+      <div class="feature-card tertiary coming-soon">
+        <div class="card-icon">🔎</div>
+        <h3>Advanced Search</h3>
+        <p>Search with complex criteria and saved filters</p>
+        <span class="coming-soon-badge">Coming Soon</span>
+      </div>
+    </div>
+  </section>
+</div>
