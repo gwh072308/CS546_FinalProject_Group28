@@ -5,6 +5,7 @@
 import arrestsRoutes from './arrests.js';
 import usersRoutes from './users.js';
 import commentsRoutes from './comments.js';
+import trendsRoutes from './trends.js';
 
 const constructorMethod = (app) => {
   // Home route
@@ -18,6 +19,7 @@ const constructorMethod = (app) => {
   app.use('/arrests', arrestsRoutes);
   app.use('/users', usersRoutes);
   app.use('/comments', commentsRoutes);
+  app.use('/trends', trendsRoutes);
 
   // 404 handler - must be last
   // Note: This will be caught by notFoundHandler middleware in app.js
