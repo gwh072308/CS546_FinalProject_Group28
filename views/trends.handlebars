@@ -1,0 +1,32 @@
+<h1>{{title}}</h1>
+
+{{#if trends.length}}
+  <table class="table table-striped" style="margin-top:20px;">
+    <thead>
+      <tr>
+        {{#if (eq type "month")}}
+          <th>Month</th>
+        {{else}}
+          <th>Year</th>
+          <th>Week</th>
+        {{/if}}
+        <th>Total Arrests</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each trends}}
+        <tr>
+          {{#if (eq ../type "month")}}
+            <td>{{this.month}}</td>
+          {{else}}
+            <td>{{this.year}}</td>
+            <td>{{this.week}}</td>
+          {{/if}}
+          <td>{{this.totalArrests}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>No trend data available.</p>
+{{/if}}
