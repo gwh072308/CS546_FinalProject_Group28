@@ -1,7 +1,17 @@
 (function ($) {
 
     function loadComments() {
-        var arrestId = $('#arrestId').val();
+        // if there is no arrestId element on this page (like /help, /home), just skip
+        var $arrestInput = $('#arrestId');
+        if ($arrestInput.length === 0) {
+            return;
+        }
+
+        var arrestId = $arrestInput.val();
+        if (!arrestId) {
+            // avoid calling /comments/arrest/undefined
+            return;
+        }
 
         $.ajax({
             method: "GET",
