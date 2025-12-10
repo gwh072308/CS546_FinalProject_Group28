@@ -17,6 +17,20 @@ main {
   padding: 2rem 1rem;
 }
 
+/* Footer Styles */
+footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  margin-top: 3rem;
+  color: #666;
+  font-size: 0.9rem;
+  border-top: 1px solid #ddd;
+}
+
+footer p {
+  margin: 0;
+}
+
 h1 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
@@ -329,6 +343,41 @@ button[type="submit"]:hover {
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.error-text,
+.error,
+#search-error {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: block;
+}
+
+.error:empty,
+#search-error:empty {
+  display: none;
+}
+
+.login-container .error-content,
+.register-container .error-content,
+form ~ .error-content {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: block;
 }
 
 /* User Profile */
@@ -1536,4 +1585,53 @@ form input:focus {
 .dashboard-footer-note {
   font-size: 0.9rem;
   color: #555;
+}
+
+.login-container,
+.register-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.login-container form,
+.register-container form {
+  text-align: left;
+}
+
+.login-container form label,
+.register-container form label {
+  text-align: left;
+}
+
+.login-container button[type="submit"],
+.login-container .submit-button,
+.register-container button[type="submit"] {
+  display: block;
+  margin: 1.5rem auto 0;
+  width: 100%;
+  max-width: 200px;
+}
+
+.link-text {
+  display: block;
+  text-align: center;
+  margin: 0.5rem 0;
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.link-text:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.register-container > p {
+  text-align: center;
+  margin-top: 1rem;
 }

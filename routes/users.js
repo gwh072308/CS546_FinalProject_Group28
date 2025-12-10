@@ -3,8 +3,8 @@
 import { Router } from "express";
 import usersData from "../data/users.js";
 import { requireAuth, requireGuest } from "../middleware/auth.js";
-import { checkString, checkId } from "../data/utils.js";
-
+import { checkString, validatePassword } from "../data/utils.js";
+import xss from "xss"
 const router = Router();
 
 // GET /users/login - Display login page
@@ -26,6 +26,7 @@ router.post("/login", requireGuest, async (req, res) => {
     }
 
     username = checkString(username, "username");
+    username = xss(username);
     
     // Validate password without trimming (security: preserve user intent)
     if (typeof password !== "string" || password.length === 0) {
@@ -79,12 +80,11 @@ router.post("/register", requireGuest, async (req, res) => {
 
     // Validate username and email using checkString
     username = checkString(username, "username");
+    username = xss(username);
     email = checkString(email, "email");
-
-    // Validate password without trimming (security: preserve user intent)
-    if (typeof password !== "string" || password.length === 0) {
-      throw "Invalid password";
-    }
+    email = xss(email);
+    // Validate password
+    password = validatePassword(password);
 
     // Create user
     const newUser = await usersData.createUser({

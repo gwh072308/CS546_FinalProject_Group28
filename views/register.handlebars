@@ -2,6 +2,10 @@
 <div class="register-container">
     <h1>User Registration</h1>
 
+    {{#if error}}
+    <p class="error-text">{{error}}</p>
+    {{/if}}
+
     <form id="register-form" method="post" action="/users/register">
 
         <label for="username">Username:</label>
@@ -27,13 +31,8 @@
         <button type="submit">Register</button>
 
     </form>
-
-    {{#if error}}
-    <p class="error-text">{{error}}</p>
-    {{/if}}
-
     <p>
         Already have an account?
-        <a href="/users/login">Log in here</a>
+        <a class="link-text" href="/users/login">Log in here</a>
     </p>
 </div>

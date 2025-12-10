@@ -1,5 +1,6 @@
 import express from "express";
 import { ObjectId } from "mongodb";
+import xss from "xss";  //add xss
 import commentsData from "../data/comments.js";
 import { checkString } from "../data/utils.js";
 
@@ -32,6 +33,8 @@ router.post("/", async (req, res) => {
     arrestId = validateObjectId(arrestId, "Arrest ID");
     userId = validateObjectId(userId, "User ID");
     content = checkString(content, "Comment content");
+    //xss
+    content = xss(content);
 
     const newComment = await commentsData.addComment(userId, arrestId, content);
     return res.status(201).json(newComment);
@@ -47,6 +50,8 @@ router.put("/:id", async (req, res) => {
 
     userId = validateObjectId(userId, "User ID");
     content = checkString(content, "Comment content");
+
+    content = xss(content);
 
     const updatedComment = await commentsData.updateComment(
       commentId,
