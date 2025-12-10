@@ -6,6 +6,8 @@ import arrestsRoutes from './arrests.js';
 import usersRoutes from './users.js';
 import commentsRoutes from './comments.js';
 import trendsRoutes from './trends.js';
+import helpRoutes from './help.js'; // Import help routes
+import statsRoutes from './stats.js'; // Import stats routes
 
 const constructorMethod = (app) => {
   // Home route
@@ -20,6 +22,8 @@ const constructorMethod = (app) => {
   app.use('/users', usersRoutes);
   app.use('/comments', commentsRoutes);
   app.use('/trends', trendsRoutes);
+  app.use('/help', helpRoutes); // for Help and FAQ page 
+  app.use('/trends/dashboard', statsRoutes); // for Statistical Dashboard page
 
   // 404 handler - must be last
   // Note: This will be caught by notFoundHandler middleware in app.js
