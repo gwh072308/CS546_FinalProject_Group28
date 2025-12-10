@@ -9,6 +9,7 @@ import {
 } from "../data/arrests.js";
 import commentsData from "../data/comments.js";
 import { checkString, checkId } from "../data/utils.js";
+import xss from "xss"; 
 
 
 router.get("/", async (req, res) => {
@@ -51,6 +52,7 @@ router.get("/search", async (req, res) => {
 
   try {
     keyword = checkString(keyword, "keyword");
+    keyword = xss(keyword);
     const results = await searchArrests(keyword);
     return res.render("search", {
       showForm: true,
