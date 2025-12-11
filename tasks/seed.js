@@ -11,7 +11,7 @@ import bcrypt from 'bcryptjs';
 // Configuration
 const API_URL = 'https://data.cityofnewyork.us/resource/uip8-fykc.json';
 const SAMPLE_SIZE = 1000;
-const SAMPLES_PER_BOROUGH = 200;
+const SAMPLES_PER_BOROUGH = 400; // changed this from 200 to 400 (so the total records would be around 2000 for 5 boroughs)
 
 // Main seeding function
 const main = async () => {
@@ -63,35 +63,57 @@ const main = async () => {
 };
 
 // Fetch arrest data from NYC Open Data API
-// Fetches up to 50000 records to ensure we have enough data for sampling
+// Now fetches ALL pages (in 50k chunks) so we cover months up to the latest date
 async function fetchArrestData() {
   try {
-    // Fetch 50000 records from the API
-    // This gives us enough data to perform stratified sampling
-    const url = `${API_URL}?$limit=50000`;
-    console.log(`Fetching data from: ${url}`);
-    
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    const limit = 50000;
+    let offset = 0;
+    let allData = [];
+
+    // CHANGE: Added pagination loop — previously API returned only first 50k rows.
+    // Now we keep fetching until the API stops returning records.
+    while (true) {
+      const url = `${API_URL}?$limit=${limit}&$offset=${offset}`;
+      console.log(`Fetching data from: ${url}`);
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+      }
+
+      const batch = await response.json();
+
+      // CHANGE: Stop when API returns an empty batch (meaning no more pages)
+      if (!batch || batch.length === 0) {
+        break;
+      }
+
+      allData = allData.concat(batch);
+
+      // CHANGE: If the batch is smaller than limit, we've reached the last page
+      if (batch.length < limit) {
+        break;
+      }
+
+      // CHANGE: Increase offset to fetch next 50k chunk
+      offset += limit;
     }
 
-    const data = await response.json();
-    
-    if (!data || data.length === 0) {
+    if (!allData.length) {
       throw new Error('No data received from API');
     }
 
-    return data;
+    console.log(`Total records fetched from API: ${allData.length}`);
+    return allData;
   } catch (error) {
     console.error('Error fetching data from API:', error);
-    
-    // Fallback: generate sample data if API fails
+
+    // Fallback: generate sample data if API fails - unchanged logic
     console.log('Falling back to generated sample data...');
     return generateSampleData();
   }
 }
+
 
 // Perform stratified sampling by borough
 // Ensures each borough (M, K, Q, B, S) has equal representation

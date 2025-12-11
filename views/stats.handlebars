@@ -62,3 +62,8 @@
         </p>
     </section>
 </section>
+
+{{!-- UPDATED: expose DB borough chart data to client-side JS --}}
+<script>
+    window.boroughChartData = {{{asJSON boroughChartData}}};
+</script>
