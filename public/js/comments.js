@@ -60,7 +60,7 @@
 
         var button = $(this);
         var commentId = button.data('id');
-        var userId = $('#userId').val();
+        var userId = $('#commentUserId').val() || $('#userId').val();
 
         $.ajax({
             method: "DELETE",
@@ -75,8 +75,8 @@
     $('#comment-form').on('submit', function (event) {
         event.preventDefault();
 
-        var arrestId = $('#arrestId').val();
-        var userId = $('#userId').val();
+        var arrestId = $('#commentArrestId').val();
+        var userId = $('#commentUserId').val();
         var content = $('#comment-text').val();
 
         $.ajax({

@@ -136,7 +136,7 @@ router.post("/add-favorite", requireAuth, async (req, res) => {
     if (!arrestId || typeof arrestId !== "string" || !arrestId.trim()) {
       return res.status(400).json({ error: "Invalid arrest ID" });
     }
-    arrestId = arrestId.trim();
+    arrestId = xss(arrestId.trim());
     
     await usersData.addFavorite(req.session.user._id, arrestId);
     res.json({ success: true, message: "Added to favorites" });
@@ -152,7 +152,7 @@ router.post("/remove-favorite", requireAuth, async (req, res) => {
     if (!arrestId || typeof arrestId !== "string" || !arrestId.trim()) {
       return res.status(400).json({ error: "Invalid arrest ID" });
     }
-    arrestId = arrestId.trim();
+    arrestId = xss(arrestId.trim());
     
     await usersData.removeFavorite(req.session.user._id, arrestId);
     res.json({ success: true, message: "Removed from favorites" });
@@ -168,7 +168,7 @@ router.get("/favorite-status/:arrestId", requireAuth, async (req, res) => {
     if (!arrestId || typeof arrestId !== "string" || !arrestId.trim()) {
       return res.status(400).json({ error: "Invalid arrest ID" });
     }
-    arrestId = arrestId.trim();
+    arrestId = xss(arrestId.trim());
     
     const user = await usersData.getUserById(req.session.user._id);
     const isFavorite = user.favorites && user.favorites.includes(arrestId);

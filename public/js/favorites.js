@@ -1,4 +1,3 @@
-// filepath: /Users/nageshwaranmanikumar/Desktop/CS546_FinalProject_Group28/public/js/favorites.js
 
 $(document).ready(function() {
   const userId = $('#userId').val();
@@ -30,8 +29,8 @@ function addFavoritesButton(arrestId, userId) {
     }
   });
   
-  // Insert button after arrest details title or in a convenient location
-  $('.back-link').before(button);
+  // Insert button into the action buttons container
+  $('.action-buttons-container').prepend(button);
   
   // Handle button click
   $(document).on('click', '#favorite-btn', function(e) {
