@@ -10,7 +10,7 @@ const saltRounds = 10;
 const exportedMethods = {
   async createUser({ username, password, email }) {
     if (!username || typeof username !== "string" || !username.trim()) throw "Invalid username";
-    if (!password || typeof password !== "string" || password.length < 6) throw "Invalid password";
+    if (!password || typeof password !== "string" || password.length < 8) throw "Password must be at least 8 characters long";
     if (!email || typeof email !== "string" || !email.trim()) throw "Invalid email";
 
     const db = await dbConnection();
