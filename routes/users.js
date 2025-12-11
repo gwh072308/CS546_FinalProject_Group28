@@ -109,7 +109,7 @@ router.post("/register", requireGuest, async (req, res) => {
   }
 });
 
-// GET /users/profile/:id - Display user profile
+// GET /users/profile - Display user profile
 router.get("/profile", async (req, res) => {
   try {
      if (!req.session.user) {
@@ -126,6 +126,56 @@ router.get("/profile", async (req, res) => {
       statusCode: 404,
       title: "Error"
     });
+  }
+});
+
+// POST /users/add-favorite - Add arrest to favorites
+router.post("/add-favorite", requireAuth, async (req, res) => {
+  try {
+    let { arrestId } = req.body;
+    if (!arrestId || typeof arrestId !== "string" || !arrestId.trim()) {
+      return res.status(400).json({ error: "Invalid arrest ID" });
+    }
+    arrestId = arrestId.trim();
+    
+    await usersData.addFavorite(req.session.user._id, arrestId);
+    res.json({ success: true, message: "Added to favorites" });
+  } catch (e) {
+    res.status(400).json({ error: e.toString() });
+  }
+});
+
+// POST /users/remove-favorite - Remove arrest from favorites
+router.post("/remove-favorite", requireAuth, async (req, res) => {
+  try {
+    let { arrestId } = req.body;
+    if (!arrestId || typeof arrestId !== "string" || !arrestId.trim()) {
+      return res.status(400).json({ error: "Invalid arrest ID" });
+    }
+    arrestId = arrestId.trim();
+    
+    await usersData.removeFavorite(req.session.user._id, arrestId);
+    res.json({ success: true, message: "Removed from favorites" });
+  } catch (e) {
+    res.status(400).json({ error: e.toString() });
+  }
+});
+
+// GET /users/favorite-status/:arrestId - Check if arrest is favorited
+router.get("/favorite-status/:arrestId", requireAuth, async (req, res) => {
+  try {
+    let { arrestId } = req.params;
+    if (!arrestId || typeof arrestId !== "string" || !arrestId.trim()) {
+      return res.status(400).json({ error: "Invalid arrest ID" });
+    }
+    arrestId = arrestId.trim();
+    
+    const user = await usersData.getUserById(req.session.user._id);
+    const isFavorite = user.favorites && user.favorites.includes(arrestId);
+    
+    res.json({ isFavorite });
+  } catch (e) {
+    res.status(400).json({ error: e.toString() });
   }
 });
 

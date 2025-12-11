@@ -14,6 +14,11 @@
 
 <br>
 
+{{#if user}}
+<input type="hidden" id="userId" value="{{user._id}}">
+{{/if}}
+<input type="hidden" id="arrestId" value="{{arrest._id}}">
+
 <a class="back-link" href="/arrests">Back to Arrest List</a>
 
 <br><br>
@@ -23,6 +28,7 @@
 </div>
 
 <script src="/public/js/map.js"></script>
+<script src="/public/js/favorites.js"></script>
 <hr>
 
 <h2>Comments</h2>

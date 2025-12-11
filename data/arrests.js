@@ -4,7 +4,6 @@ import {
   checkId,
   checkString,
   checkNumber,
-  checkPositiveInt
 } from "../data/utils.js";
 
 const createArrest = async (
@@ -136,43 +135,16 @@ const createArrest = async (
   return inserted;
 };
 
-// Get all arrests with pagination support
-const getAllArrests = async (page = 1, limit = 50) => {
-  page = checkPositiveInt(page, "page");
-  limit = checkPositiveInt(limit, "limit");
-  
-  if (limit > 100) throw "Error: limit cannot exceed 100";
-  
+const getAllArrests = async () => {
   const arrestCollection = await arrests();
-  
-  try {
-    // Calculate skip value
-    const skip = (page - 1) * limit;
-    
-    // Get total count
-    const totalCount = await arrestCollection.countDocuments();
-    
-    // Get paginated results
-    const arrestList = await arrestCollection
-      .find({})
-      .skip(skip)
-      .limit(limit)
-      .toArray();
-    
-    // Calculate total pages
-    const totalPages = Math.ceil(totalCount / limit);
-    
-    return {
-      arrests: arrestList,
-      currentPage: page,
-      totalPages: totalPages,
-      totalCount: totalCount,
-      hasNextPage: page < totalPages,
-      hasPrevPage: page > 1
-    };
-  } catch (e) {
-    throw `Error: could not get arrests - ${e}`;
-  }
+  const all = await arrestCollection.find({}).toArray();
+
+  if (!all || all.length === 0) return [];
+
+  return all.map((a) => {
+    a._id = a._id.toString();
+    return a;
+  });
 };
 
 const getArrestById = async (id) => {
@@ -241,61 +213,115 @@ const searchArrests = async (keyword) => {
 
   return results.map((a) => ({ ...a, _id: a._id.toString() }));
 };
-// Get crime category ranking - identify most frequent offenses citywide
+
 const getCrimeRanking = async (limit = 10) => {
-  // Validate limit
-  limit = checkNumber(limit, "limit");
-  if (limit < 1 || limit > 50) {
-    throw "Error: limit must be between 1 and 50";
-  }
-  
   const arrestCollection = await arrests();
-  
+  const pipeline = [
+    { $group: { _id: '$offense_description', count: { $sum: 1 } } },
+    { $sort: { count: -1 } },
+    { $limit: limit },
+    { $project: { _id: 0, offense: '$_id', count: 1 } }
+  ];
+
+  const agg = await arrestCollection.aggregate(pipeline).toArray();
+  return agg.map(item => ({ offense: item.offense || 'Unknown', count: item.count || 0 }));
+};
+
+const getDemographicData = async () => {
   try {
-    const ranking = await arrestCollection.aggregate([
-      {
-        $group: {
-          _id: "$offense_description",
-          count: { $sum: 1 },
-          lawCategory: { $first: "$law_category" }
-        }
-      },
-      {
-        $sort: { count: -1 }
-      },
-      {
-        $limit: limit
-      },
-      {
-        $project: {
-          _id: 0,
-          offense: "$_id",
-          count: 1,
-          lawCategory: 1,
-          percentage: {
-            $round: [
-              {
-                $multiply: [
-                  { $divide: ["$count", 1000] },
-                  100
-                ]
-              },
-              2
-            ]
-          }
-        }
-      }
-    ]).toArray();
-    
-    if (!ranking || ranking.length === 0) {
-      throw "Error: no ranking data found";
+    const arrestCollection = await arrests();
+    const arrestData = await arrestCollection.find({}).toArray();
+
+    if (!arrestData || arrestData.length === 0) {
+      return {
+        ageGroupData: { labels: [], values: [] },
+        genderData: { labels: [], values: [] },
+        raceData: { labels: [], values: [] },
+        boroughDemographicData: { labels: [], age18_25: [], age25_45: [], age45plus: [] },
+        ageGenderData: { labels: [], male: [], female: [] },
+        raceBoroughData: { labels: [], black: [], white: [], hispanic: [], asian: [] },
+        total: 0
+      };
     }
-    
-    return ranking;
+
+    const ageGroups = {};
+    const genderStats = {};
+    const raceStats = {};
+    const boroughDemo = {};
+    const ageGender = {};
+    const raceBoroughs = {};
+
+    arrestData.forEach(arrest => {
+      const ageGroupRaw = arrest.age_group || 'Unknown';
+      const ageGroup = String(ageGroupRaw).trim() || 'Unknown';
+      ageGroups[ageGroup] = (ageGroups[ageGroup] || 0) + 1;
+
+      const gender = (arrest.gender || 'Unknown').toString().trim();
+      genderStats[gender] = (genderStats[gender] || 0) + 1;
+
+      const race = (arrest.race || 'Unknown').toString().trim();
+      raceStats[race] = (raceStats[race] || 0) + 1;
+
+      const borough = (arrest.borough || 'Unknown').toString().trim();
+      if (!boroughDemo[borough]) {
+        boroughDemo[borough] = { age18_25: 0, age25_45: 0, age45plus: 0 };
+      }
+      if (ageGroup.includes('18') || ageGroup.includes('18-')) boroughDemo[borough].age18_25++;
+      else if (ageGroup.includes('25') || ageGroup.includes('25-') || ageGroup.includes('25-44')) boroughDemo[borough].age25_45++;
+      else if (ageGroup.includes('45') || ageGroup.includes('65') || ageGroup.includes('+')) boroughDemo[borough].age45plus++;
+
+      const agKey = ageGroup;
+      if (!ageGender[agKey]) ageGender[agKey] = { male: 0, female: 0 };
+      const g = gender.toUpperCase();
+      if (g === 'M' || g === 'MALE') ageGender[agKey].male++;
+      else if (g === 'F' || g === 'FEMALE') ageGender[agKey].female++;
+
+      if (!raceBoroughs[borough]) raceBoroughs[borough] = { black: 0, white: 0, hispanic: 0, asian: 0 };
+      const r = race.toUpperCase();
+      if (r.includes('BLACK')) raceBoroughs[borough].black++;
+      else if (r.includes('WHITE')) raceBoroughs[borough].white++;
+      else if (r.includes('HISPANIC')) raceBoroughs[borough].hispanic++;
+      else if (r.includes('ASIAN')) raceBoroughs[borough].asian++;
+    });
+
+    return {
+      ageGroupData: {
+        labels: Object.keys(ageGroups),
+        values: Object.values(ageGroups)
+      },
+      genderData: {
+        labels: Object.keys(genderStats),
+        values: Object.values(genderStats)
+      },
+      raceData: {
+        labels: Object.keys(raceStats),
+        values: Object.values(raceStats)
+      },
+      boroughDemographicData: {
+        labels: Object.keys(boroughDemo),
+        age18_25: Object.values(boroughDemo).map(b => b.age18_25),
+        age25_45: Object.values(boroughDemo).map(b => b.age25_45),
+        age45plus: Object.values(boroughDemo).map(b => b.age45plus)
+      },
+      ageGenderData: {
+        labels: Object.keys(ageGender),
+        male: Object.values(ageGender).map(ag => ag.male),
+        female: Object.values(ageGender).map(ag => ag.female)
+      },
+      raceBoroughData: {
+        labels: Object.keys(raceBoroughs),
+        black: Object.values(raceBoroughs).map(rb => rb.black),
+        white: Object.values(raceBoroughs).map(rb => rb.white),
+        hispanic: Object.values(raceBoroughs).map(rb => rb.hispanic),
+        asian: Object.values(raceBoroughs).map(rb => rb.asian)
+      },
+      total: arrestData.length
+    };
   } catch (e) {
-    throw `Error: could not get crime ranking - ${e}`;
+    throw `Error: could not get demographic data - ${e}`;
   }
 };
+
 export {
   createArrest,
   getAllArrests,
@@ -303,5 +329,6 @@ export {
   removeArrest,
   getArrestsByFilter,
   searchArrests,
-  getCrimeRanking
+  getCrimeRanking,
+  getDemographicData
 };

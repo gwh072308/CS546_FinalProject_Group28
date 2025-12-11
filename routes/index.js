@@ -17,13 +17,21 @@ const constructorMethod = (app) => {
     });
   });
 
+  // Demographic Insights route
+  app.get('/demographics', (req, res) => {
+    res.render('demographicInsights', {
+      title: 'Demographic Insights',
+      user: req.session.user || null
+    });
+  });
+
   // Mount feature routes
   app.use('/arrests', arrestsRoutes);
   app.use('/users', usersRoutes);
   app.use('/comments', commentsRoutes);
   app.use('/trends', trendsRoutes);
   app.use('/help', helpRoutes); // for Help and FAQ page 
-  app.use('/trends/dashboard', statsRoutes); // for Statistical Dashboard page
+  app.use('/stats', statsRoutes); // for Statistical Dashboard page
 
   // 404 handler - must be last
   // Note: This will be caught by notFoundHandler middleware in app.js

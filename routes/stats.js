@@ -1,6 +1,7 @@
 // routes/stats.js
 
 import { Router } from 'express';
+import * as arrestsData from '../data/arrests.js';
 
 const router = Router();
 
@@ -31,6 +32,17 @@ router.get('/', async (req,res) => {
             title: 'Error',
             message: 'An error occurred while fetching statistics.'
         });
+    }
+});
+
+// GET /stats/demographics - Fetch demographic data
+router.get('/demographics', async (req, res) => {
+    try {
+        const demographicData = await arrestsData.getDemographicData();
+        res.json(demographicData);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: 'Failed to fetch demographic data' });
     }
 });
 
