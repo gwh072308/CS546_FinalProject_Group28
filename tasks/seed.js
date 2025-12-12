@@ -264,7 +264,7 @@ async function seedTestUsers() {
     {
       username: 'testuser',
       email: 'test@example.com',
-      password: await bcrypt.hash('Password123', 10),
+      password: await bcrypt.hash('Password123@', 10),
       createdAt: new Date(),
       favorites: [],
       comments: []
@@ -273,7 +273,7 @@ async function seedTestUsers() {
     {
       username: 'admin',
       email: 'admin@example.com',
-      password: await bcrypt.hash('Admin123', 10),
+      password: await bcrypt.hash('Admin123&', 10),
       createdAt: new Date(),
       favorites: [],
       comments: []
@@ -282,9 +282,9 @@ async function seedTestUsers() {
 
   const insertResult = await usersCollection.insertMany(testUsers);
   console.log(`Created ${insertResult.insertedCount} test users`);
-  console.log('  - wenhuigao (Team member account)');
-  console.log('  - testuser (Generic test account)');
-  console.log('  - admin (Admin test account)');
+  console.log('  - wenhuigao / Wenhui2025！');
+  console.log('  - testuser (P password23@)');
+  console.log('  - admin (Admin123&)');
   
   return insertResult;
 }
