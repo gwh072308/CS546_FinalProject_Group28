@@ -1,7 +1,17 @@
 (function ($) {
 
     function loadComments() {
-        var arrestId = $('#arrestId').val();
+        // if there is no arrestId element on this page (like /help, /home), just skip
+        var $arrestInput = $('#arrestId');
+        if ($arrestInput.length === 0) {
+            return;
+        }
+
+        var arrestId = $arrestInput.val();
+        if (!arrestId) {
+            // avoid calling /comments/arrest/undefined
+            return;
+        }
 
         $.ajax({
             method: "GET",
@@ -17,23 +27,31 @@
 
             var userId = $('#userId').val();
 
-            var html = "<ul class='comment-list'>";
+            var $list = $('<ul>').addClass('comment-list');
 
             data.comments.forEach(function (c) {
-                html += `
-                    <li class="comment-item">
-                        <strong>${c.username || "User"}:</strong>
-                        <p>${c.text}</p>
-                        <small>${new Date(c.createdAt).toLocaleString()}</small>
-                        ${String(c.userId) === userId ?
-                        `<button class="delete-btn" data-id="${c._id}">Delete</button>`
-                        : ""}
-                    </li>
-                `;
+               var $li = $('<li>').addClass('comment-item');
+                
+                // Prevent XSS
+                $li.append($('<strong>').text((c.username || "User") + ":"));
+                $li.append($('<p>').text(c.text));  
+                $li.append($('<small>').text(new Date(c.createdAt).toLocaleString()));
+                
+                if (String(c.userId) === userId) {
+                    var $btn = $('<button>')
+                        .addClass('delete-btn')
+                        .attr('data-id', c._id)  
+                        .text('Delete');
+                    $li.append($btn);
+                }
+                
+                $list.append($li);
             });
 
-            html += "</ul>";
-            container.html(html);
+            container.html($list);
+        }).fail(function (xhr, status, error) {
+            console.error('Error loading comments:', error);
+            container.html("<p style='color: red;'>Error loading comments. Please refresh the page.</p>");
         });
     }
 
@@ -42,7 +60,7 @@
 
         var button = $(this);
         var commentId = button.data('id');
-        var userId = $('#userId').val();
+        var userId = $('#commentUserId').val() || $('#userId').val();
 
         $.ajax({
             method: "DELETE",
@@ -57,8 +75,8 @@
     $('#comment-form').on('submit', function (event) {
         event.preventDefault();
 
-        var arrestId = $('#arrestId').val();
-        var userId = $('#userId').val();
+        var arrestId = $('#commentArrestId').val();
+        var userId = $('#commentUserId').val();
         var content = $('#comment-text').val();
 
         $.ajax({

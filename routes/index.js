@@ -6,6 +6,7 @@ import arrestsRoutes from './arrests.js';
 import usersRoutes from './users.js';
 import commentsRoutes from './comments.js';
 import trendsRoutes from './trends.js';
+
 import helpRoutes from './help.js';
 import statsRoutes from './stats.js';
 import * as arrestsData from '../data/arrests.js';
@@ -19,6 +20,7 @@ const constructorMethod = (app) => {
   });
 
   // Demographic Insights route
+
   app.get('/demographics', async (req, res) => {
     try {
       const demographicData = await arrestsData.getDemographicData();
@@ -42,6 +44,7 @@ const constructorMethod = (app) => {
   app.use('/users', usersRoutes);
   app.use('/comments', commentsRoutes);
   app.use('/trends', trendsRoutes);
+
   app.use('/help', helpRoutes);
   app.use('/stats', statsRoutes);
 

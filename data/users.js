@@ -9,6 +9,7 @@ const saltRounds = 10;
 
 const exportedMethods = {
   async createUser({ username, password, email }) {
+
     username = validateUsername(username);
     password = validatePassword(password);
     email = validateEmail(email);

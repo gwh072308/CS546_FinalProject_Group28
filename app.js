@@ -5,6 +5,7 @@
 import express from 'express';
 import session from 'express-session';
 import exphbs from 'express-handlebars';
+import Handlebars from 'handlebars';
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
 
@@ -58,22 +59,26 @@ const handlebarsInstance = exphbs.create({
   defaultLayout: 'main',
   helpers: {
     asJSON: (obj, spacing) => {
-      if (typeof spacing === 'number')
-        return new exphbs.SafeString(JSON.stringify(obj, null, spacing));
-      return new exphbs.SafeString(JSON.stringify(obj));
+      const json =
+        typeof spacing === 'number'
+          ? JSON.stringify(obj, null, spacing)
+          : JSON.stringify(obj);
+      return new Handlebars.SafeString(json);
     },
+
     // Math helper for simple arithmetic operations in templates
     math: (lvalue, operator, rvalue) => {
       lvalue = parseFloat(lvalue);
       rvalue = parseFloat(rvalue);
       return {
-        "+": lvalue + rvalue,
-        "-": lvalue - rvalue,
-        "*": lvalue * rvalue,
-        "/": lvalue / rvalue,
-        "%": lvalue % rvalue
+        '+': lvalue + rvalue,
+        '-': lvalue - rvalue,
+        '*': lvalue * rvalue,
+        '/': lvalue / rvalue,
+        '%': lvalue % rvalue
       }[operator];
     },
+
     // Equality helper for comparisons in templates
     eq: (a, b) => {
       return a === b;
