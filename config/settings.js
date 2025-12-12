@@ -3,7 +3,7 @@
 
 export const mongoConfig = {
   serverUrl: "mongodb://127.0.0.1:27017/",
-  database: "nyc_arrests"  // or maybe "cs546_final_project_group28"
+  database: "nyc_arrests"
 };
 
 export const collections = {

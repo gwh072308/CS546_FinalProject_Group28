@@ -1,140 +1,334 @@
-{{!-- home page placeholder --}}
 <div class="home-container">
-  <!-- Hero Section -->
-  <div class="hero-section">
-    <h1>NYC Arrest Data Visualization</h1>
-    <p class="subtitle">Explore and analyze arrest patterns across New York City</p>
-  </div>
-
-  <!-- Core Features Section -->
-  <section class="features-section">
-    <h2 class="section-title">Core Features</h2>
-    <div class="features-grid">
-      <!-- 1. Browse Arrests -->
-      <div class="feature-card primary">
-        <div class="card-icon">📊</div>
-        <h3>Browse Arrests</h3>
-        <p>View all arrest records with pagination and detailed information for each case</p>
-        <a href="/arrests" class="card-button">View Arrests →</a>
-      </div>
-
-      <!-- 2. Filter & Search -->
-      <div class="feature-card primary">
-        <div class="card-icon">🔍</div>
-        <h3>Filter & Search</h3>
-        <p>Filter arrests by borough, precinct, demographics, and export filtered results</p>
-        <a href="/arrests/filter" class="card-button">Start Filtering →</a>
-      </div>
-
-      <!-- 3. Crime Ranking -->
-      <div class="feature-card primary">
-        <div class="card-icon">🏆</div>
-        <h3>Crime Ranking</h3>
-        <p>Identify the most frequent offenses across all five NYC boroughs</p>
-        <a href="/arrests/ranking" class="card-button">View Ranking →</a>
+  {{!-- Hero Section --}}
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">NYC Arrest Data Visualization and Analysis System</h1>
+      <p class="hero-subtitle">Explore arrest patterns across time, geography, and demographics</p>
+      <div class="hero-actions">
+        <a href="/arrests" class="btn btn-primary btn-lg">Explore Data</a>
+        <a href="/help" class="btn btn-secondary btn-lg">Learn More</a>
       </div>
     </div>
   </section>
 
-  <!-- Analysis Tools Section -->
+  {{!-- Core Features Section --}}
   <section class="features-section">
-    <h2 class="section-title">Analysis & Insights</h2>
-    <div class="features-grid">
-      <!-- 4. Time-Series Trends -->
-      <div class="feature-card secondary">
-        <div class="card-icon">📈</div>
-        <h3>Time-Series Trends</h3>
-        <p>Visualize monthly and weekly arrest counts to observe temporal changes</p>
-        <div class="card-buttons">
-          <a href="/trends/monthly" class="card-button-small">Monthly</a>
-          <a href="/trends/weekly" class="card-button-small">Weekly</a>
+    <div class="section-header">
+      <h2 class="section-title">Core Features</h2>
+      <p class="section-description">Required project functionalities as specified in our proposal</p>
+    </div>
+
+    <div class="feature-grid">
+      {{!-- Browse Arrest Records --}}
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3 class="feature-title">Browse Arrest Records</h3>
+        <p class="feature-description">View all arrest records with pagination and efficient data access</p>
+        <a href="/arrests" class="btn btn-primary">Browse Arrests →</a>
+      </div>
+
+      {{!-- Search and Filtering --}}
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3 class="feature-title">Search & Filter</h3>
+        <p class="feature-description">Search and filter by borough, date range, or offense type</p>
+        <a href="/arrests/filter" class="btn btn-primary">Start Filtering →</a>
+      </div>
+
+      {{!-- Detailed View --}}
+      <div class="feature-card">
+        <div class="feature-icon">📄</div>
+        <h3 class="feature-title">Detailed View</h3>
+        <p class="feature-description">Sort and view comprehensive details for each arrest record</p>
+        <a href="/arrests" class="btn btn-primary">View Details →</a>
+      </div>
+
+      {{!-- Statistical Dashboard --}}
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3 class="feature-title">Statistical Dashboard</h3>
+        <p class="feature-description">Summary dashboard with total arrests, major crime categories, and borough comparisons</p>
+        <a href="/stats" class="btn btn-primary">View Dashboard →</a>
+      </div>
+
+      {{!-- Demographic Insights --}}
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3 class="feature-title">Demographic Insights</h3>
+        <p class="feature-description">Demographic breakdowns by age, gender, and race across regions</p>
+        <a href="/demographics" class="btn btn-primary">View Demographics →</a>
+      </div>
+
+      {{!-- User Comments --}}
+      <div class="feature-card">
+        <div class="feature-icon">💬</div>
+        <h3 class="feature-title">User Comments</h3>
+        <p class="feature-description">Registered users can add notes and comments on trends and findings</p>
+        {{#if user}}
+          <a href="/arrests" class="btn btn-primary">Add Comments →</a>
+        {{else}}
+          <a href="/users/login" class="btn btn-primary">Login to Comment →</a>
+        {{/if}}
+      </div>
+
+      {{!-- Time-Series Trends --}}
+      <div class="feature-card">
+        <div class="feature-icon">📉</div>
+        <h3 class="feature-title">Time-Series Trends</h3>
+        <p class="feature-description">Visualize monthly and weekly arrest counts to observe temporal changes</p>
+        <div class="btn-group">
+          <a href="/trends/monthly" class="btn btn-secondary">Monthly</a>
+          <a href="/trends/weekly" class="btn btn-secondary">Weekly</a>
         </div>
       </div>
 
-      <!-- 5. Statistical Dashboard -->
-      <div class="feature-card secondary coming-soon">
-        <div class="card-icon">📊</div>
-        <h3>Statistical Dashboard</h3>
-        <p>Summary dashboard with total arrests, major crime categories, and borough comparisons</p>
-        <span class="coming-soon-badge">Coming Soon</span>
-      </div>
-
-      <!-- 6. Demographic Insights -->
-      <div class="feature-card secondary coming-soon">
-        <div class="card-icon">👥</div>
-        <h3>Demographic Insights</h3>
-        <p>Analyze arrest patterns by age, gender, and race across different regions</p>
-        <span class="coming-soon-badge">Coming Soon</span>
-      </div>
-
-      <!-- 7. Data Export -->
-      <div class="feature-card secondary">
-        <div class="card-icon">📥</div>
-        <h3>Data Export</h3>
-        <p>Export filtered arrest results to CSV or PDF files for reporting</p>
-        <a href="/arrests/filter" class="card-button-small">Export Data</a>
+      {{!-- Crime Category Ranking --}}
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <h3 class="feature-title">Crime Ranking</h3>
+        <p class="feature-description">Identify the most frequent offenses citywide</p>
+        <a href="/arrests/ranking" class="btn btn-primary">View Ranking →</a>
       </div>
     </div>
   </section>
 
-  <!-- User Features Section -->
-  <section class="features-section">
-    <h2 class="section-title">User Features</h2>
-    <div class="features-grid small">
-      <!-- 8. Comments -->
-      <div class="feature-card tertiary">
-        <div class="card-icon">💬</div>
-        <h3>Comments</h3>
-        <p>Add notes and comments on specific arrest records</p>
-        {{#if user}}
-        <a href="/comments/user/{{user._id}}" class="card-button-small">My Comments</a>
-        {{else}}
-        <a href="/users/login" class="card-button-small">Login to Comment</a>
-        {{/if}}
+  {{!-- Extra Features Section --}}
+  <section class="features-section extra-features">
+    <div class="section-header">
+      <h2 class="section-title">Extra Features</h2>
+      <p class="section-description">Bonus implementations for enhanced user experience</p>
+    </div>
+
+    <div class="feature-grid">
+      {{!-- Data Export --}}
+      <div class="feature-card">
+        <div class="feature-icon">📥</div>
+        <h3 class="feature-title">Data Export & Reporting</h3>
+        <p class="feature-description">Export filtered arrest results to CSV or PDF files for reporting</p>
+        <a href="/arrests/filter" class="btn btn-primary">Export Data →</a>
       </div>
 
-      <!-- 9. Account Management -->
-      <div class="feature-card tertiary">
-        <div class="card-icon">👤</div>
-        <h3>My Account</h3>
-        {{#if user}}
-        <p>Welcome back, {{user.username}}!</p>
-        <a href="/users/profile" class="card-button-small">View Profile</a>
-        {{else}}
-        <p>Login or register to personalize your experience</p>
-        <a href="/users/login" class="card-button-small">Login / Register</a>
-        {{/if}}
+      {{!-- Dark/Light Mode --}}
+      <div class="feature-card">
+        <div class="feature-icon">🌙</div>
+        <h3 class="feature-title">Dark/Light Mode</h3>
+        <p class="feature-description">Switch between dark and light themes for comfortable viewing</p>
+        <button class="btn btn-dark" onclick="toggleTheme()">🌙 Dark Mode</button>
       </div>
 
-      <!-- 10. Help & FAQ -->
-      <div class="feature-card tertiary coming-soon">
-        <div class="card-icon">❓</div>
-        <h3>Help & FAQ</h3>
-        <p>Learn about system features and get answers to common questions</p>
-        <span class="coming-soon-badge">Coming Soon</span>
+      {{!-- Help & FAQ --}}
+      <div class="feature-card">
+        <div class="feature-icon">❓</div>
+        <h3 class="feature-title">Help & FAQ</h3>
+        <p class="feature-description">Learn about system features and get answers to common questions</p>
+        <a href="/help" class="btn btn-primary">Open Help →</a>
       </div>
     </div>
   </section>
 
-  <!-- Extra Features Section -->
-  <section class="features-section">
-    <h2 class="section-title">Extra Features</h2>
-    <div class="features-grid small">
-      <!-- Dark/Light Mode -->
-      <div class="feature-card tertiary coming-soon">
-        <div class="card-icon">🌓</div>
-        <h3>Dark/Light Mode</h3>
-        <p>Switch between themes for comfortable viewing</p>
-        <span class="coming-soon-badge">Coming Soon</span>
-      </div>
-
-      <!-- Advanced Search -->
-      <div class="feature-card tertiary coming-soon">
-        <div class="card-icon">🔎</div>
-        <h3>Advanced Search</h3>
-        <p>Search with complex criteria and saved filters</p>
-        <span class="coming-soon-badge">Coming Soon</span>
-      </div>
+  {{!-- Project Information --}}
+  <section class="project-info-section">
+    <div class="project-info-content">
+      <h3>CS-546 Final Project - Group 28</h3>
+      <p>All features listed above are implemented as specified in our project proposal</p>
+      <p class="text-muted">Data source: NYC Open Data - NYPD Arrest Data (Year to Date)</p>
     </div>
   </section>
 </div>
+
+<style>
+.home-container {
+  width: 100%;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 80px 20px;
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  opacity: 0.95;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.features-section {
+  max-width: 1200px;
+  margin: 0 auto 60px;
+  padding: 0 20px;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #2d3748;
+  border-bottom: 3px solid #667eea;
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.section-description {
+  font-size: 1rem;
+  color: #718096;
+  margin-top: 10px;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.feature-card {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  border-color: #667eea;
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.2);
+}
+
+.feature-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.feature-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #2d3748;
+}
+
+.feature-description {
+  color: #718096;
+  margin-bottom: 20px;
+  line-height: 1.6;
+  min-height: 60px;
+}
+
+.btn-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.project-info-section {
+  background: #f7fafc;
+  padding: 40px 20px;
+  text-align: center;
+  border-top: 1px solid #e2e8f0;
+}
+
+.project-info-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.project-info-content h3 {
+  color: #2d3748;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.project-info-content p {
+  color: #718096;
+  margin: 5px 0;
+}
+
+.text-muted {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Dark mode support */
+body.dark-mode .section-title {
+  color: #e2e8f0;
+  border-bottom-color: #667eea;
+}
+
+body.dark-mode .feature-card {
+  background: #2d3748;
+  border-color: #4a5568;
+}
+
+body.dark-mode .feature-card:hover {
+  border-color: #667eea;
+}
+
+body.dark-mode .feature-title {
+  color: #e2e8f0;
+}
+
+body.dark-mode .feature-description,
+body.dark-mode .section-description {
+  color: #cbd5e0;
+}
+
+body.dark-mode .project-info-section {
+  background: #1a202c;
+  border-top-color: #2d3748;
+}
+
+body.dark-mode .project-info-content h3 {
+  color: #e2e8f0;
+}
+
+body.dark-mode .project-info-content p {
+  color: #cbd5e0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 1.8rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+  }
+  
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
