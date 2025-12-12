@@ -77,4 +77,42 @@ export const validatePassword = (password) => {
   if (!/[!@#$%^&*(),.?":{}|<>_\-+=]/.test(password))
     throw "Password must contain at least one special character";
   return password;
+}
+// Validate username
+export const validateUsername = (username) => {
+  if (typeof username !== "string") 
+    throw "Username must be a string";
+  
+  username = username.trim();
+  
+  if (username.length === 0) 
+    throw "Username cannot be empty";
+  
+  if (username.length < 3) 
+    throw "Username must be at least 3 characters long";
+  
+  if (username.length > 20) 
+    throw "Username must be at most 20 characters long";
+  
+  if (!/^[a-zA-Z0-9_]+$/.test(username)) 
+    throw "Username can only contain letters, numbers, and underscores";
+  
+  return username.toLowerCase();
+};
+
+// Validate email
+export const validateEmail = (email) => {
+  if (typeof email !== "string") 
+    throw "Email must be a string";
+  
+  email = email.trim();
+  
+  if (email.length === 0) 
+    throw "Email cannot be empty";
+  
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) 
+    throw "Email must be a valid email address";
+  
+  return email.toLowerCase();
 };

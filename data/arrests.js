@@ -135,16 +135,28 @@ const createArrest = async (
   return inserted;
 };
 
-const getAllArrests = async () => {
+const getAllArrests = async (page = 1, limit = 50) => {
   const arrestCollection = await arrests();
-  const all = await arrestCollection.find({}).toArray();
-
-  if (!all || all.length === 0) return [];
-
-  return all.map((a) => {
-    a._id = a._id.toString();
-    return a;
-  });
+  
+  const skip = (page - 1) * limit;
+  
+  const totalCount = await arrestCollection.countDocuments();
+  const totalPages = Math.ceil(totalCount / limit);
+  
+  const arrestsData = await arrestCollection
+    .find({})
+    .skip(skip)
+    .limit(limit)
+    .toArray();
+    
+  return {
+    arrests: arrestsData.map((a) => ({ ...a, _id: a._id.toString() })),
+    currentPage: page,
+    totalPages: totalPages,
+    totalCount: totalCount,
+    hasNextPage: page < totalPages,
+    hasPrevPage: page > 1
+  };
 };
 
 const getArrestById = async (id) => {

@@ -3,29 +3,31 @@
 import bcrypt from "bcryptjs";
 import { ObjectId } from "mongodb";
 import dbConnection from "../config/mongoConnection.js";
-import { checkId } from "./utils.js";
+import { checkId, validatePassword, validateUsername, validateEmail } from "./utils.js";
 
 const saltRounds = 10;
 
 const exportedMethods = {
   async createUser({ username, password, email }) {
-    if (!username || typeof username !== "string" || !username.trim()) throw "Invalid username";
-    if (!password || typeof password !== "string" || password.length < 8) throw "Password must be at least 8 characters long";
-    if (!email || typeof email !== "string" || !email.trim()) throw "Invalid email";
+
+    username = validateUsername(username);
+    password = validatePassword(password);
+    email = validateEmail(email);
 
     const db = await dbConnection();
     const usersCol = db.collection("users");
 
     // Check for existing username/email
-    const existingUsername = await usersCol.findOne({ username: username.trim().toLowerCase() });
+    const existingUsername = await usersCol.findOne({ username });
     if (existingUsername) throw "Username already exists";
-    const existingEmail = await usersCol.findOne({ email: email.trim().toLowerCase() });
+
+    const existingEmail = await usersCol.findOne({ email });
     if (existingEmail) throw "Email already exists";
 
     const hashed = await bcrypt.hash(password, saltRounds);
     const user = {
-      username: username.trim().toLowerCase(),
-      email: email.trim().toLowerCase(),
+      username,
+      email,
       password: hashed,
       createdAt: new Date(),
       favorites: [], // for storing favorite arrests

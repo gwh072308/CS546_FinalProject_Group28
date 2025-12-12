@@ -72,10 +72,20 @@ router.get("/filter", async (req, res) => {
   }
 
   try {
-    const results = await getArrestsByFilter(filters);
+    // XSS sanitization - MODIFIED
+    const cleanFilters = {};
+    for (const [key, value] of Object.entries(filters)) {
+      if (value && typeof value === 'string') {
+        cleanFilters[key] = xss(value.trim());
+      } else if (value) {
+        cleanFilters[key] = value;
+      }
+    }
     
-    // Build query string for export links
-    const queryString = new URLSearchParams(filters).toString();
+    const results = await getArrestsByFilter(cleanFilters);
+    
+    // Build query string for export links - MODIFIED
+    const queryString = new URLSearchParams(cleanFilters).toString();
     
     return res.render("filter", { 
       arrests: results,
@@ -103,6 +113,7 @@ router.get("/ranking", async (req, res) => {
     });
   }
 });
+
 router.get("/:id", async (req, res) => {
   try {
     const id = checkId(req.params.id, "id");
@@ -122,13 +133,24 @@ router.get("/:id/comments", async (req, res) => {
     return res.status(400).json({ error: e });
   }
 });
+
 // Export filtered results to CSV
 router.get("/filter/export/csv", async (req, res) => {
   try {
     const filters = req.query;
     
-    // Get filtered results
-    const results = await getArrestsByFilter(filters);
+    // XSS sanitization - MODIFIED
+    const cleanFilters = {};
+    for (const [key, value] of Object.entries(filters)) {
+      if (value && typeof value === 'string') {
+        cleanFilters[key] = xss(value.trim());
+      } else if (value) {
+        cleanFilters[key] = value;
+      }
+    }
+    
+    // Get filtered results - MODIFIED
+    const results = await getArrestsByFilter(cleanFilters);
     
     if (results.length === 0) {
       return res.status(400).send("No results to export");
@@ -173,8 +195,18 @@ router.get("/filter/export/pdf", async (req, res) => {
     const { PDFDocument, rgb, StandardFonts } = await import('pdf-lib');
     const filters = req.query;
     
-    // Get filtered results
-    const results = await getArrestsByFilter(filters);
+    // XSS sanitization - MODIFIED
+    const cleanFilters = {};
+    for (const [key, value] of Object.entries(filters)) {
+      if (value && typeof value === 'string') {
+        cleanFilters[key] = xss(value.trim());
+      } else if (value) {
+        cleanFilters[key] = value;
+      }
+    }
+    
+    // Get filtered results - MODIFIED
+    const results = await getArrestsByFilter(cleanFilters);
     
     if (results.length === 0) {
       return res.status(400).send("No results to export");
@@ -229,8 +261,9 @@ router.get("/filter/export/pdf", async (req, res) => {
     });
     yPosition -= 20;
     
-    if (filters.borough) {
-      page.drawText(`Borough: ${filters.borough}`, {
+    // MODIFIED - use cleanFilters
+    if (cleanFilters.borough) {
+      page.drawText(`Borough: ${cleanFilters.borough}`, {
         x: 60,
         y: yPosition,
         size: 10,
@@ -239,8 +272,8 @@ router.get("/filter/export/pdf", async (req, res) => {
       yPosition -= 15;
     }
     
-    if (filters.precinct) {
-      page.drawText(`Precinct: ${filters.precinct}`, {
+    if (cleanFilters.precinct) {
+      page.drawText(`Precinct: ${cleanFilters.precinct}`, {
         x: 60,
         y: yPosition,
         size: 10,
@@ -249,8 +282,8 @@ router.get("/filter/export/pdf", async (req, res) => {
       yPosition -= 15;
     }
     
-    if (filters.age_group) {
-      page.drawText(`Age Group: ${filters.age_group}`, {
+    if (cleanFilters.age_group) {
+      page.drawText(`Age Group: ${cleanFilters.age_group}`, {
         x: 60,
         y: yPosition,
         size: 10,
@@ -259,8 +292,8 @@ router.get("/filter/export/pdf", async (req, res) => {
       yPosition -= 15;
     }
     
-    if (filters.gender) {
-      page.drawText(`Gender: ${filters.gender}`, {
+    if (cleanFilters.gender) {
+      page.drawText(`Gender: ${cleanFilters.gender}`, {
         x: 60,
         y: yPosition,
         size: 10,
@@ -269,8 +302,8 @@ router.get("/filter/export/pdf", async (req, res) => {
       yPosition -= 15;
     }
     
-    if (filters.race) {
-      page.drawText(`Race: ${filters.race}`, {
+    if (cleanFilters.race) {
+      page.drawText(`Race: ${cleanFilters.race}`, {
         x: 60,
         y: yPosition,
         size: 10,
@@ -361,4 +394,5 @@ router.get("/filter/export/pdf", async (req, res) => {
     return res.status(500).send(`Error generating PDF: ${e.message || e}`);
   }
 });
+
 export default router;

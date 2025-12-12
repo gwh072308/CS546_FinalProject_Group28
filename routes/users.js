@@ -81,8 +81,10 @@ router.post("/register", requireGuest, async (req, res) => {
     // Validate username and email using checkString
     username = checkString(username, "username");
     username = xss(username);
+    
     email = checkString(email, "email");
     email = xss(email);
+    
     // Validate password
     password = validatePassword(password);
 
