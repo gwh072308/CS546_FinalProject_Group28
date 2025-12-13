@@ -36,6 +36,7 @@ h1 {
   margin-bottom: 1rem;
   font-weight: 600;
   color: #2c3e50;
+  text-align: center;
 }
 
 h2 {
@@ -2140,6 +2141,7 @@ body.dark-mode .demographics-page .chart-badge {
   margin: 1.5rem 0 2rem 0;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
 }
 
 .action-buttons-container .back-link {
@@ -2490,5 +2492,73 @@ body.dark-mode .project-info-content p {
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 0.4rem;
+}
+
+/* Arrest Details */
+.arrest-details-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.arrest-info-details {
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.arrest-info-details p {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.action-buttons-container {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+#map {
+  margin: 20px auto;
+  display: block;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.comment-form-centered {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  background: transparent;
+}
+
+.comment-form-centered textarea {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  display: block;
+  padding: 0.75rem;
+  border: 1px solid;
+  border-radius: 0.25rem;
+  font-family: inherit;
+}
+
+.comment-form-centered button {
+  margin-top: 1rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin: 1rem 0;
+  color: #007bff;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 2px solid #007bff;
+  border-radius: 0.25rem;
+  transition: all 0.3s ease;
 }
   
