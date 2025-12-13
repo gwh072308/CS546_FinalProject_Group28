@@ -226,17 +226,66 @@ const searchArrests = async (keyword) => {
   return results.map((a) => ({ ...a, _id: a._id.toString() }));
 };
 
+// const getCrimeRanking = async (limit = 10) => {
+//   const arrestCollection = await arrests();
+//   const pipeline = [
+//     { $group: { _id: '$offense_description', count: { $sum: 1 } } },
+//     { $sort: { count: -1 } },
+//     { $limit: limit },
+//     { $project: { _id: 0, offense: '$_id', count: 1 } }
+//   ];
+
+//   const agg = await arrestCollection.aggregate(pipeline).toArray();
+//   return agg.map(item => ({ offense: item.offense || 'Unknown', count: item.count || 0 }));
+// };
+// 第 229-240 行，替换整个函数
 const getCrimeRanking = async (limit = 10) => {
   const arrestCollection = await arrests();
+  
+  // First, get total count for percentage calculation
+  const totalCount = await arrestCollection.countDocuments({});
+  
+  // Get top offenses with their law categories
   const pipeline = [
-    { $group: { _id: '$offense_description', count: { $sum: 1 } } },
+    {
+      $group: {
+        _id: {
+          offense: '$offense_description',
+          lawCategory: '$law_category'
+        },
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $group: {
+        _id: '$_id.offense',
+        count: { $sum: '$count' },
+        lawCategory: { $first: '$_id.lawCategory' }
+      }
+    },
     { $sort: { count: -1 } },
     { $limit: limit },
-    { $project: { _id: 0, offense: '$_id', count: 1 } }
+    {
+      $project: {
+        _id: 0,
+        offense: '$_id',
+        count: 1,
+        lawCategory: 1
+      }
+    }
   ];
 
   const agg = await arrestCollection.aggregate(pipeline).toArray();
-  return agg.map(item => ({ offense: item.offense || 'Unknown', count: item.count || 0 }));
+  
+  // Calculate percentage and format the result
+  return agg.map(item => ({
+    offense: item.offense || 'Unknown',
+    count: item.count || 0,
+    lawCategory: (item.lawCategory || 'Unknown').toLowerCase(),
+    percentage: totalCount > 0 
+      ? ((item.count / totalCount) * 100).toFixed(2) 
+      : '0.00'
+  }));
 };
 
 const getDemographicData = async () => {

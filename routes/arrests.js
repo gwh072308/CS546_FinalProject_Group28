@@ -10,6 +10,7 @@ import {
 import commentsData from "../data/comments.js";
 import { checkString, checkId } from "../data/utils.js";
 import xss from "xss"; 
+import { arrests } from "../config/mongoCollections.js";  
 
 
 router.get("/", async (req, res) => {
@@ -101,11 +102,14 @@ router.get("/ranking", async (req, res) => {
   try {
     const limit = req.query.limit ? parseInt(req.query.limit) : 10;
     const ranking = await getCrimeRanking(limit);
+
+    const arrestCollection = await arrests();
+    const totalRecords = await arrestCollection.countDocuments({});
     
     return res.render("crimeRanking", {
       title: "Crime Category Ranking",
       ranking: ranking,
-      totalRecords: 1000
+      totalRecords: totalRecords 
     });
   } catch (e) {
     return res.status(500).render("error", { 
