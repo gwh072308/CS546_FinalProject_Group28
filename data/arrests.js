@@ -137,18 +137,18 @@ const createArrest = async (
 
 const getAllArrests = async (page = 1, limit = 50) => {
   const arrestCollection = await arrests();
-  
+
   const skip = (page - 1) * limit;
-  
+
   const totalCount = await arrestCollection.countDocuments();
   const totalPages = Math.ceil(totalCount / limit);
-  
+
   const arrestsData = await arrestCollection
     .find({})
     .skip(skip)
     .limit(limit)
     .toArray();
-    
+
   return {
     arrests: arrestsData.map((a) => ({ ...a, _id: a._id.toString() })),
     currentPage: page,
@@ -226,26 +226,9 @@ const searchArrests = async (keyword) => {
   return results.map((a) => ({ ...a, _id: a._id.toString() }));
 };
 
-// const getCrimeRanking = async (limit = 10) => {
-//   const arrestCollection = await arrests();
-//   const pipeline = [
-//     { $group: { _id: '$offense_description', count: { $sum: 1 } } },
-//     { $sort: { count: -1 } },
-//     { $limit: limit },
-//     { $project: { _id: 0, offense: '$_id', count: 1 } }
-//   ];
-
-//   const agg = await arrestCollection.aggregate(pipeline).toArray();
-//   return agg.map(item => ({ offense: item.offense || 'Unknown', count: item.count || 0 }));
-// };
-// 第 229-240 行，替换整个函数
 const getCrimeRanking = async (limit = 10) => {
   const arrestCollection = await arrests();
-  
-  // First, get total count for percentage calculation
   const totalCount = await arrestCollection.countDocuments({});
-  
-  // Get top offenses with their law categories
   const pipeline = [
     {
       $group: {
@@ -276,14 +259,13 @@ const getCrimeRanking = async (limit = 10) => {
   ];
 
   const agg = await arrestCollection.aggregate(pipeline).toArray();
-  
-  // Calculate percentage and format the result
+
   return agg.map(item => ({
     offense: item.offense || 'Unknown',
     count: item.count || 0,
     lawCategory: (item.lawCategory || 'Unknown').toLowerCase(),
-    percentage: totalCount > 0 
-      ? ((item.count / totalCount) * 100).toFixed(2) 
+    percentage: totalCount > 0
+      ? ((item.count / totalCount) * 100).toFixed(2)
       : '0.00'
   }));
 };
