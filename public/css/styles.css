@@ -2428,3 +2428,67 @@ body.dark-mode .project-info-content p {
   height: 1px;
   overflow: hidden;
 }
+
+
+/* Center Filter Results block */
+.filter-results-page {
+  display: flex;
+  justify-content: center;
+}
+
+.filter-results-container {
+  width: 100%;
+  max-width: 950px;
+}
+
+.filter-results-list {
+  padding-left: 1.25rem;
+}
+
+/* FILTER RESULTS – CARD VIEW*/
+
+.filter-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+}
+  
+.filter-card {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 1.2rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+  
+.filter-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+  
+.filter-offense {
+    margin-bottom: 0.6rem;
+    font-size: 1.05rem;
+}
+  
+.filter-offense a {
+    color: #007bff;
+    font-weight: 600;
+    text-decoration: none;
+}
+  
+.filter-offense a:hover {
+    text-decoration: underline;
+}
+  
+.filter-meta {
+    font-size: 0.9rem;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+  
