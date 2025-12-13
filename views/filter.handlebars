@@ -63,28 +63,43 @@
 
 {{#if arrests}}
 {{#if arrests.length}}
-<div class="filter-results">
-  <h3>Filtered Results ({{arrests.length}} records)</h3>
-  
-  <div class="export-buttons">
-    <a href="/arrests/filter/export/csv?{{queryString}}" class="export-btn csv-btn">
-      Export to CSV
-    </a>
-    <a href="/arrests/filter/export/pdf?{{queryString}}" class="export-btn pdf-btn">
-      Export to PDF
-    </a>
-  </div>
-  
-  <ul>
-    {{#each arrests}}
-    <li>
-      <a href="/arrests/{{this._id}}">
-        {{this.offense_description}} - {{this.borough}} ({{this.arrest_date}})
-      </a>
-    </li>
-    {{/each}}
-  </ul>
+
+<div class="filter-results-page">
+  <div class="filter-results-container">
+
+    <div class="filter-results">
+      <h3>Filtered Results ({{arrests.length}} records)</h3>
+
+      <div class="export-buttons">
+        <a href="/arrests/filter/export/csv?{{queryString}}" class="export-btn csv-btn">
+          Export to CSV
+        </a>
+        <a href="/arrests/filter/export/pdf?{{queryString}}" class="export-btn pdf-btn">
+          Export to PDF
+        </a>
+      </div>
+
+      <div class="filter-cards">
+        {{#each arrests}}
+          <div class="filter-card">
+            <h4 class="filter-offense">
+              <a href="/arrests/{{this._id}}">
+                {{this.offense_description}}
+              </a>
+            </h4>
+
+          <div class="filter-meta">
+            <span><strong>Borough:</strong> {{this.borough}}</span>
+            <span><strong>Date:</strong> {{this.arrest_date}}</span>
+          </div>
+      </div>
+  {{/each}}
 </div>
+    </div>
+
+  </div>
+</div>
+
 {{else}}
 <p>No matching records found.</p>
 {{/if}}
